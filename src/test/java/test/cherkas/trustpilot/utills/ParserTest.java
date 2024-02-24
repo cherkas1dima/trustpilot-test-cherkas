@@ -33,8 +33,8 @@ public class ParserTest {
 
         var businessUnit = parser.getBusinessUnitFromHtml(html);
 
-        Assertions.assertEquals(1460, businessUnit.getNumberOfReviews());
-        Assertions.assertEquals(4.9, businessUnit.getTrustScore());
+        Assertions.assertEquals(1460, businessUnit.getReviewsCount());
+        Assertions.assertEquals(4.9, businessUnit.getRating());
     }
 
     @Test

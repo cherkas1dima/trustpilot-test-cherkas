@@ -1,6 +1,7 @@
 package test.cherkas.trustpilot.domain.props;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 @Setter
@@ -11,6 +12,9 @@ import lombok.*;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BusinessUnit {
 
-    private Integer numberOfReviews;
-    private Double trustScore;
+    @JsonProperty(value = "numberOfReviews")
+    private Integer reviewsCount;
+
+    @JsonProperty(value = "trustScore")
+    private Double rating;
 }
