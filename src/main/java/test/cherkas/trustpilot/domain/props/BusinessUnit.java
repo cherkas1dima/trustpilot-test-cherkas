@@ -4,11 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
-@Setter
-@Getter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class BusinessUnit {
 
@@ -17,4 +13,28 @@ public class BusinessUnit {
 
     @JsonProperty(value = "trustScore")
     private Double rating;
+
+    public BusinessUnit(Integer reviewsCount, Double rating) {
+        this.reviewsCount = reviewsCount;
+        this.rating = rating;
+    }
+
+    public BusinessUnit() {
+    }
+
+    public Integer getReviewsCount() {
+        return reviewsCount;
+    }
+
+    public void setReviewsCount(Integer reviewsCount) {
+        this.reviewsCount = reviewsCount;
+    }
+
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
 }
