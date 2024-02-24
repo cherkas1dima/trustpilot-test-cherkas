@@ -1,12 +1,12 @@
 package test.cherkas.trustpilot.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 import test.cherkas.trustpilot.domain.props.BusinessUnit;
 import test.cherkas.trustpilot.domain.props.PropsResponse;
 
+import java.io.IOException;
 import java.util.Objects;
 
 @Component
@@ -20,12 +20,12 @@ public class Parser {
                     .getProps()
                     .getPageProps()
                     .getBusinessUnit();
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public PropsResponse parseJsonToProps(String json) throws JsonProcessingException {
+    public PropsResponse parseJsonToProps(String json) throws IOException {
         var objectMapper = new ObjectMapper();
         return objectMapper.readValue(json, PropsResponse.class);
     }

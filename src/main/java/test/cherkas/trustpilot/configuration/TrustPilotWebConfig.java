@@ -13,6 +13,8 @@ public class TrustPilotWebConfig {
 
     @Bean
     public WebClient trustpilotClient() {
-        return WebClient.create(url);
+        return WebClient.builder()
+                .baseUrl(url)
+                .build();
     }
 }
