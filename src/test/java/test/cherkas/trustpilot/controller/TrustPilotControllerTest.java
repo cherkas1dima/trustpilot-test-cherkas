@@ -39,6 +39,7 @@ class TrustPilotControllerTest {
                 .getResponseBody()
                 .blockFirst();
 
+        Assertions.assertNotNull(response);
         Assertions.assertEquals(1460, response.getReviewsCount());
         Assertions.assertEquals(4.9, response.getRating());
     }
