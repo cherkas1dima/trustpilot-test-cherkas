@@ -3,6 +3,7 @@ package test.cherkas.trustpilot.domain;
 import lombok.*;
 
 @Builder
+@ToString
 public class TrustPilotResponse {
 
     private Integer reviewsCount;

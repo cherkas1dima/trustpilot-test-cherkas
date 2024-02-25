@@ -1,5 +1,6 @@
 package test.cherkas.trustpilot.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatusCode;
@@ -14,6 +15,7 @@ import test.cherkas.trustpilot.mapper.TrustPilotResponseConverter;
 import test.cherkas.trustpilot.utils.Parser;
 
 @Service
+@Slf4j
 public class TrustPilotServiceImpl implements TrustPilotService {
 
     private final WebClient trustpilotClient;
@@ -31,18 +33,20 @@ public class TrustPilotServiceImpl implements TrustPilotService {
     @Cacheable("trustpilotData")
     public Mono<TrustPilotResponse> getTrustPilot(String domain) {
         if (!domainValidation(domain)) {
-            throw new DomainValidationException("domain value is null or not valid");
+            throw new DomainValidationException("domain value (" + domain + ") is not valid");
         }
         return trustpilotClient.get()
                 .uri(String.join("", "/", domain))
                 .retrieve()
                 .onStatus(HttpStatusCode::is4xxClientError,
-                        error -> Mono.error(new TrustPilotBadRequestException(domain + " API not found")))
+                        error -> Mono.error(new TrustPilotBadRequestException("API not found for domain: " + domain)))
                 .onStatus(HttpStatusCode::is5xxServerError,
-                        error -> Mono.error(new TrustPilotServerErrorException(domain + " Server is not responding")))
+                        error -> Mono.error(new TrustPilotServerErrorException("Server is not responding for domain: " + domain)))
                 .bodyToMono(String.class)
                 .map(str ->  {
+                    log.info("successfully got html response for {} domain", domain);
                     var businessUnit = parser.getBusinessUnitFromHtml(str);
+                    log.info("businessUnit info parsed successfully");
                     return converter.convert(businessUnit);
                 })
                 .cache();

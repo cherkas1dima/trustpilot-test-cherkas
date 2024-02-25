@@ -1,5 +1,6 @@
 package test.cherkas.trustpilot.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import test.cherkas.trustpilot.domain.TrustPilotResponse;
 import test.cherkas.trustpilot.service.TrustPilotService;
 
 @RestController
+@Slf4j
 public class TrustPilotController {
 
     private final TrustPilotService service;
@@ -24,6 +26,7 @@ public class TrustPilotController {
     private ResponseEntity<Mono<TrustPilotResponse>> getEmployeeDetails(@PathVariable("domain") String domain) {
 
         var resp = service.getTrustPilot(domain);
+        resp.subscribe(response -> log.info("successfully converted data to response {}", response));
         return ResponseEntity.status(HttpStatus.OK).body(resp);
     }
 }
