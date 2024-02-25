@@ -5,6 +5,7 @@ import org.jsoup.Jsoup;
 import org.springframework.stereotype.Component;
 import test.cherkas.trustpilot.domain.props.BusinessUnit;
 import test.cherkas.trustpilot.domain.props.PropsResponse;
+import test.cherkas.trustpilot.exception.ParserException;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -21,7 +22,7 @@ public class Parser {
                     .getPageProps()
                     .getBusinessUnit();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ParserException("Html data parsing error: " + e.getMessage());
         }
     }
 
