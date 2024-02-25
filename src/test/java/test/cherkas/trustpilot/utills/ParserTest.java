@@ -9,7 +9,7 @@ import test.cherkas.trustpilot.utils.Parser;
 import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
 
-public class ParserTest {
+class ParserTest {
 
     Parser parser = new Parser();
 

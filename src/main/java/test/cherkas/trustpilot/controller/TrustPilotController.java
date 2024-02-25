@@ -23,7 +23,7 @@ public class TrustPilotController {
     }
 
     @GetMapping("/reviews/{domain}")
-    private ResponseEntity<Mono<TrustPilotResponse>> getEmployeeDetails(@PathVariable("domain") String domain) {
+    private ResponseEntity<Mono<TrustPilotResponse>> getTrustPilotData(@PathVariable("domain") String domain) {
 
         var resp = service.getTrustPilot(domain);
         resp.subscribe(response -> log.info("successfully converted data to response {}", response));

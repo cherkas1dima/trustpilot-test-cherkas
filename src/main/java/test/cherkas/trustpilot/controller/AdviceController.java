@@ -1,5 +1,6 @@
 package test.cherkas.trustpilot.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,7 @@ import test.cherkas.trustpilot.exception.TrustPilotBadRequestException;
 import test.cherkas.trustpilot.exception.TrustPilotServerErrorException;
 
 @RestControllerAdvice
+@Slf4j
 public class AdviceController {
 
     @ExceptionHandler(value = {TrustPilotBadRequestException.class})
@@ -20,7 +22,8 @@ public class AdviceController {
                 .message(ex.getMessage())
                 .description("www.trustpilot.com have no review data for your domain")
                 .build();
-        return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+        log.info("Exception TrustPilotBadRequestException handled by ControllerAdvice");
+        return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {TrustPilotServerErrorException.class})
@@ -30,6 +33,7 @@ public class AdviceController {
                 .message(ex.getMessage())
                 .description("Internal Server Error at www.trustpilot.com side")
                 .build();
+        log.info("Exception TrustPilotServerErrorException handled by ControllerAdvice");
         return new ResponseEntity<>(err, HttpStatus.BAD_GATEWAY);
     }
 
@@ -40,6 +44,7 @@ public class AdviceController {
                 .message(ex.getMessage())
                 .description("There are exception during response data parsing step")
                 .build();
+        log.info("Exception ParserException handled by ControllerAdvice");
         return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -50,6 +55,7 @@ public class AdviceController {
                 .message(ex.getMessage())
                 .description("Please check your domain")
                 .build();
+        log.info("Exception DomainValidationException handled by ControllerAdvice");
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
     }
 }
