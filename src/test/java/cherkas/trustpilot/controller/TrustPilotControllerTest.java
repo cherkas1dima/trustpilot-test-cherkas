@@ -1,7 +1,6 @@
 package cherkas.trustpilot.controller;
 
 import cherkas.trustpilot.domain.TrustPilotResponse;
-import cherkas.trustpilot.mapper.TrustPilotResponseMapper;
 import cherkas.trustpilot.service.TrustPilotService;
 import com.github.benmanes.caffeine.cache.Cache;
 import org.junit.jupiter.api.Assertions;
@@ -28,9 +27,6 @@ public class TrustPilotControllerTest {
 
     @MockBean
     WebClient webClient;
-
-    @MockBean
-    TrustPilotResponseMapper mapper;
 
     @MockBean
     Cache<String, TrustPilotResponse> caffeineCache;

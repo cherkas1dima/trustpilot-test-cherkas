@@ -5,7 +5,6 @@ import cherkas.trustpilot.domain.props.BusinessUnit;
 import cherkas.trustpilot.exception.DomainValidationException;
 import cherkas.trustpilot.exception.TrustPilotBadRequestException;
 import cherkas.trustpilot.exception.TrustPilotServerErrorException;
-import cherkas.trustpilot.mapper.TrustPilotResponseMapper;
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import static cherkas.trustpilot.mapper.TrustPilotResponseMapper.fromBusinessUnitToResponse;
 import static cherkas.trustpilot.utils.Parser.getBusinessUnitFromHtml;
 
 @Service
@@ -24,7 +24,6 @@ public class TrustPilotService {
     private static final String DOMAIN = ".com";
 
     private final WebClient trustPilotClient;
-    private final TrustPilotResponseMapper trustPilotResponseMapper;
     private final Cache<String, TrustPilotResponse> caffeineCache;
 
     public Mono<TrustPilotResponse> getTrustPilot(String domain) {
@@ -61,7 +60,7 @@ public class TrustPilotService {
     private TrustPilotResponse processHtmlToResponse(String htmlResp) {
         BusinessUnit businessUnit = getBusinessUnitFromHtml(htmlResp);
         log.info("businessUnit info parsed successfully: {}", businessUnit);
-        return trustPilotResponseMapper.fromBusinessUnitToResponse(businessUnit);
+        return fromBusinessUnitToResponse(businessUnit);
     }
 
    private Mono<TrustPilotResponse> returnFromCache(TrustPilotResponse cachedVersion) {

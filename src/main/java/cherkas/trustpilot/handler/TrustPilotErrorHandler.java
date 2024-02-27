@@ -1,4 +1,4 @@
-package cherkas.trustpilot.controller;
+package cherkas.trustpilot.handler;
 
 import cherkas.trustpilot.domain.error.TrustPilotErrorResponse;
 import cherkas.trustpilot.exception.DomainValidationException;
@@ -24,7 +24,6 @@ public class TrustPilotErrorHandler {
     @ExceptionHandler(value = {TrustPilotServerErrorException.class})
     public ResponseEntity<TrustPilotErrorResponse> notRespondingServerException(TrustPilotServerErrorException ex) {
         var err = buildError(ex.getMessage(), "TrustPilotServerErrorException", "Internal Server Error at www.trustpilot.com side", ex);
-        log.error("Exception TrustPilotServerErrorException handled by ControllerAdvice");
         return new ResponseEntity<>(err, HttpStatus.BAD_GATEWAY);
     }
 

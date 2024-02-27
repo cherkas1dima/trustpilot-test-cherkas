@@ -11,7 +11,7 @@ public class TrustPilotWebConfig {
     private static final Integer BYTE_COUNT = 16 * 1024 * 1024;
 
     @Bean
-    public WebClient trustpilotClient(@Value("${trustpilot.url}") String url) {
+    public WebClient trustpilotClient(@Value("${webclient.trustpilot.url}") String url) {
         return WebClient.builder()
                 .baseUrl(url)
                 .codecs(configurer -> configurer
