@@ -33,7 +33,7 @@ public class TrustPilotService {
         TrustPilotResponse cachedVersion = this.caffeineCache.getIfPresent(domain);
 
         return cachedVersion != null
-                ? Mono.just(cachedVersion)
+                ? returnFromCache(cachedVersion)
                 : trustPilotClient.get()
                 .uri(String.join("", "/", domain))
                 .retrieve()
@@ -42,15 +42,14 @@ public class TrustPilotService {
                 .onStatus(HttpStatusCode::is5xxServerError,
                         error -> Mono.error(new TrustPilotServerErrorException("Server is not responding for domain: " + domain)))
                 .bodyToMono(String.class)
-                .map(htmlResp -> processHtmlToResponse(htmlResp, domain))
-                .doOnNext(response -> this.caffeineCache.put(domain, response));
-    }
-
-    private TrustPilotResponse processHtmlToResponse(String htmlResp, String domain) {
-        log.info("successfully got html response for {} domain", domain);
-        BusinessUnit businessUnit = getBusinessUnitFromHtml(htmlResp);
-        log.info("businessUnit info parsed successfully: {}", businessUnit);
-        return trustPilotResponseMapper.fromBusinessUnitToResponse(businessUnit);
+                .map(htmlResp -> {
+                    log.info("successfully got html response for {} domain", domain);
+                    return processHtmlToResponse(htmlResp);
+                })
+                .doOnNext(response -> {
+                    log.info("domain data were cached for: {}", domain);
+                    this.caffeineCache.put(domain, response);
+                });
     }
 
     private void validationCheck(String domain) {
@@ -58,4 +57,15 @@ public class TrustPilotService {
             throw new DomainValidationException("domain value (" + domain + ") is not valid");
         }
     }
+
+    private TrustPilotResponse processHtmlToResponse(String htmlResp) {
+        BusinessUnit businessUnit = getBusinessUnitFromHtml(htmlResp);
+        log.info("businessUnit info parsed successfully: {}", businessUnit);
+        return trustPilotResponseMapper.fromBusinessUnitToResponse(businessUnit);
+    }
+
+   private Mono<TrustPilotResponse> returnFromCache(TrustPilotResponse cachedVersion) {
+       log.info("response from cache: {}", cachedVersion);
+        return Mono.just(cachedVersion);
+   }
 }
