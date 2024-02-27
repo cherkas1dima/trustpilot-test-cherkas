@@ -17,45 +17,35 @@ public class TrustPilotErrorHandler {
 
     @ExceptionHandler(value = {TrustPilotBadRequestException.class})
     public ResponseEntity<TrustPilotErrorResponse> apiNotFoundException(TrustPilotBadRequestException ex) {
-        var err = TrustPilotErrorResponse.builder()
-                .errorName("TrustPilotBadRequestException")
-                .message(ex.getMessage())
-                .description("www.trustpilot.com have no review data for your domain")
-                .build();
-        log.warn("Exception TrustPilotBadRequestException handled by ControllerAdvice");
+        var err = buildError(ex.getMessage(), "TrustPilotBadRequestException", "www.trustpilot.com have no review data for your domain", ex);
         return new ResponseEntity<>(err, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {TrustPilotServerErrorException.class})
     public ResponseEntity<TrustPilotErrorResponse> notRespondingServerException(TrustPilotServerErrorException ex) {
-        var err = TrustPilotErrorResponse.builder()
-                .errorName("TrustPilotServerErrorException")
-                .message(ex.getMessage())
-                .description("Internal Server Error at www.trustpilot.com side")
-                .build();
-        log.warn("Exception TrustPilotServerErrorException handled by ControllerAdvice");
+        var err = buildError(ex.getMessage(), "TrustPilotServerErrorException", "Internal Server Error at www.trustpilot.com side", ex);
+        log.error("Exception TrustPilotServerErrorException handled by ControllerAdvice");
         return new ResponseEntity<>(err, HttpStatus.BAD_GATEWAY);
     }
 
     @ExceptionHandler(value = {ParserException.class})
     public ResponseEntity<TrustPilotErrorResponse> parserException(ParserException ex) {
-        var err = TrustPilotErrorResponse.builder()
-                .errorName("ParserException")
-                .message(ex.getMessage())
-                .description("There are exception during response data parsing step")
-                .build();
-        log.warn("Exception ParserException handled by ControllerAdvice");
+        var err = buildError(ex.getMessage(), "ParserException", "There are exception during response data parsing step", ex);
         return new ResponseEntity<>(err, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = {DomainValidationException.class})
     public ResponseEntity<TrustPilotErrorResponse> validationException(DomainValidationException ex) {
-        var err = TrustPilotErrorResponse.builder()
-                .errorName("DomainValidationException")
-                .message(ex.getMessage())
-                .description("Please check your domain")
-                .build();
-        log.warn("Exception DomainValidationException handled by ControllerAdvice");
+        var err = buildError(ex.getMessage(), "DomainValidationException", "Please check your domain", ex);
         return new ResponseEntity<>(err, HttpStatus.BAD_REQUEST);
+    }
+
+    private TrustPilotErrorResponse buildError(String message, String errorName, String description, RuntimeException ex) {
+        log.error("Exception {} handled by ControllerAdvice: {}", errorName, ex.getStackTrace());
+        return TrustPilotErrorResponse.builder()
+                .errorName(errorName)
+                .message(message)
+                .description(description)
+                .build();
     }
 }
