@@ -18,6 +18,7 @@
         <commons-io.version>2.15.1</commons-io.version>
         <jsoup.version>1.15.3</jsoup.version>
         <jackson.version>2.12.7.1</jackson.version>
+        <wiremock.version>4.1.1</wiremock.version>
     </properties>
     <dependencies>
         <dependency>
@@ -71,6 +72,7 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-contract-wiremock</artifactId>
+            <version>${wiremock.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
