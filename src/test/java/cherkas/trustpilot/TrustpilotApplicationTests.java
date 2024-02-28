@@ -1,4 +1,4 @@
-package test.cherkas.trustpilot;
+package cherkas.trustpilot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+webclient:
+  trustpilot:
+    url: https://www.trustpilot.com/review
+
+caffeine:
+  max_size: 100
+  duration: 60

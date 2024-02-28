@@ -1,4 +1,4 @@
-package test.cherkas.trustpilot;
+package cherkas.trustpilot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
