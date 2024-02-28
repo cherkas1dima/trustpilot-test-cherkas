@@ -6,5 +6,5 @@ webclient:
     url: https://www.trustpilot.com/review
 
 caffeine:
-  max_size: 1000
+  max_size: 100
   duration: 60
